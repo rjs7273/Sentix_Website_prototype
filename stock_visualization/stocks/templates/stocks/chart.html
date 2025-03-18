@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>주식 차트 시각화</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <h1>삼성전자 (005930) 주가 차트</h1>
+    <canvas id="stockChart"></canvas>
+
+    <script>
+      async function fetchStockData() {
+        const response = await fetch("/stocks/chart/005930/");
+        const data = await response.json();
+
+        const labels = data.map((d) => d.date);
+        const prices = data.map((d) => d.close_price);
+
+        const ctx = document.getElementById("stockChart").getContext("2d");
+        new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "종가 (Close Price)",
+                data: prices,
+                borderColor: "blue",
+                fill: false,
+              },
+            ],
+          },
+        });
+      }
+
+      fetchStockData();
+    </script>
+  </body>
+</html>
